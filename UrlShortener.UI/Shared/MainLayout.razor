@@ -1,0 +1,33 @@
+@inherits LayoutComponentBase
+
+<div class="main">
+    <div class="content px-4">
+        @Body
+    </div>
+</div>
+
+<style>
+    body {
+        font-family: Arial;
+        padding: 20px;
+    }
+
+    .main {
+        max-width: 600px;
+        margin: auto;
+    }
+
+    input {
+        padding: 8px;
+        margin-bottom: 8px;
+        width: 100%;
+    }
+
+    button {
+        padding: 8px 12px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+</style>

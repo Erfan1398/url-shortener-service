@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: urlshortener-ui-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: urlshortener-ui
+  template:
+    metadata:
+      labels:
+        app: urlshortener-ui
+    spec:
+      containers:
+        - name: urlshortener-ui
+          image: urlshortener-ui:dev
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 80

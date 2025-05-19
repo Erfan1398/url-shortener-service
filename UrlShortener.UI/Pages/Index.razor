@@ -1,0 +1,55 @@
+@page "/"
+@using System.Net.Http
+@using System.Net.Http.Json
+@inject HttpClient Http
+
+<h3>URL Shortener</h3>
+
+<div>
+    <label>Long URL:</label>
+    <input @bind="LongUrl" placeholder="Enter long URL" style="width: 300px;" />
+</div>
+<div>
+    <label>TTL (minutes):</label>
+    <input type="number" @bind="TTLMinutes" />
+</div>
+<div>
+    <button @onclick="ShortenUrl">Shorten</button>
+</div>
+
+@if (!string.IsNullOrWhiteSpace(ShortUrl))
+{
+    <p><b>Short URL:</b> <a href="@ShortUrl" target="_blank">@ShortUrl</a></p>
+}
+@if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <p style="color:red;">@ErrorMessage</p>
+}
+@code {
+    private string LongUrl = string.Empty;
+    private int TTLMinutes = 1440;
+    private string ShortUrl = string.Empty;
+    private string ErrorMessage = string.Empty;
+
+    private async Task ShortenUrl()
+    {
+        var request = new { longUrl = LongUrl, ttlMinutes = TTLMinutes };
+var response = await Http.PostAsJsonAsync(
+    "http://host.docker.internal:5000/api/urlshortener/shorten", request);
+        if (response.IsSuccessStatusCode)
+        {
+            var result = await response.Content.ReadFromJsonAsync<ShortenResponse>();
+            ShortUrl = result?.ShortUrl ?? string.Empty;
+        }
+        else
+        {
+            ShortUrl = string.Empty;
+            ErrorMessage = "Could not shorten the URL. Please try again.";
+        }
+    }
+
+    private class ShortenResponse
+    {
+        public string ShortUrl { get; set; } = string.Empty;
+    }
+}
